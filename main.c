@@ -52,7 +52,7 @@ void drawUI(){
     for (int i=0; i<=hash; i++){
         printf("#");
     }
-    printf("\n");
+    printf("\n\n [::] ");
 
 }
 
@@ -105,11 +105,28 @@ void createNote(){
 
 int main(){
     
+    #ifdef __linux__
+        // int os=0;
+        char cmnd[5]="clear";
+    #elif _WIN32
+        // int os=1;
+        char cmnd[3]="cls";
+    #endif
+    
     while(1){
-        int option=0;
+        char option;
         drawUI();
-        scanf("%d",&option);
+        scanf(" %c",&option);
+        getchar();
+        system(cmnd);
+        switch(option){
+            case '1':
+                printf("hi");
+                printf("%c",option);
+                break;
+            default:
+                printf("\n!!Enter valid option!!\n");
+        }
     }
-
     return 0;
 }
