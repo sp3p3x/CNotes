@@ -1,10 +1,6 @@
 # <u><b>CNotes</b></u>
 
 ## A simple notes app in C 
-<br>
-
----
-<br>
 
 ## <b>Compilation:</b>
 
@@ -20,10 +16,7 @@ gcc -o cnotes main.c
 gcc -o cnotes.exe main.c
 ```
 
-<br>
-
 ---
-<br>
 
 ## <b>To Do:</b>
 
@@ -37,10 +30,7 @@ gcc -o cnotes.exe main.c
 - [ ] choose save path
 - [ ] different menu for all options
 
-<br>
-
 ---
-<br>
 
 ## <b>To Fix:</b>
 
