@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 int hash = 20;
 
 #ifdef __linux__
@@ -142,13 +141,13 @@ void modifyNote(){
 
     switch (os)
     {
-        case 0:
+        case 0: ;
             char linuxCopyCmnd[500]="cat ";
             strcat(linuxCopyCmnd,filename);
             strcat(linuxCopyCmnd," | xclip -selection clipboard");
             system(linuxCopyCmnd);
             break;
-        case 1:
+        case 1: ;
             char winCopyCmnd[500]="type ";
             strcat(winCopyCmnd,filename);
             strcat(winCopyCmnd," | clip");
