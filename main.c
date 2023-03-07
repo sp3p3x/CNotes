@@ -1,8 +1,7 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <string.h>
-
-int hash = 20;
 
 #ifdef __linux__
     #include <unistd.h>
@@ -14,64 +13,73 @@ int hash = 20;
     char clrCmnd[3]="cls";
 #endif
 
+void printLine(int type, char content[20]){
+
+    int lineLength = 23, startSpace, endSpace;
+
+    switch (type)
+    {
+        case 0:
+            int startSpace = (lineLength - 8) / 2;
+            printf("\n");
+            for (int i=0; i<lineLength; i++){
+                    printf("-");
+            }
+            printf("\n");
+            printf("|");
+            for (int i=0; i<startSpace; i++){
+                printf(" ");
+            }
+            printf(content);
+            endSpace = lineLength - ( 2 + startSpace + strlen(content));
+            for (int i=0; i<endSpace; i++){
+                printf(" ");
+            }
+            printf("|\n");
+            for (int i=0; i<lineLength; i++){
+                    printf("-");
+            }
+            printf("\n");
+            break;
+
+        case 1:
+            printf("|");
+            startSpace = lineLength/5;
+            for (int i=0; i<startSpace; i++){
+                printf(" ");
+            }
+            printf(content);
+            endSpace = lineLength - ( 2 + startSpace + strlen(content));
+            for (int i=0; i<endSpace; i++){
+                printf(" ");
+            }
+            printf("|\n");
+            break;
+        
+        case 2:
+            for (int i=0; i<lineLength; i++){
+                        printf("-");
+            }
+            printf("\n\n [::] ");
+            break;
+
+        default:
+            break;
+    }
+
+};
+
 void drawUI(){
 
-    printf("\n");
-    for (int i=0; i<=hash; i++){
-        printf("#");
-    }
-    printf("\n+");
-    for (int i=0; i<=hash-14; i++){
-        printf(" ");
-    }
-    printf("CNotes");
-    for (int i=0; i<=hash-15; i++){
-        printf(" ");
-    }
-    printf("+\n");
-    for (int i=0; i<=hash; i++){
-        printf("#");
-    }
-    printf("\n+");
-    for (int i=0; i<=hash-18; i++){
-        printf(" ");
-    }
-    printf("1.Create Note");
-    for (int i=0; i<=hash-18; i++){
-        printf(" ");
-    }
-    printf("+\n");
-    printf("+");
-    for (int i=0; i<=hash-18; i++){
-        printf(" ");
-    }
-    printf("2.Read Note");
-    for (int i=0; i<=hash-16; i++){
-        printf(" ");
-    }
-    printf("+\n");
-    printf("+");
-    for (int i=0; i<=hash-18; i++){
-        printf(" ");
-    }
-    printf("3.Modify Note");
-    for (int i=0; i<=hash-18; i++){
-        printf(" ");
-    }
-    printf("+\n");
-    printf("+");
-    for (int i=0; i<=hash-18; i++){
-        printf(" ");
-    }
-    printf("4.Exit");
-    for (int i=0; i<=hash-11; i++){
-        printf(" ");
-    }
-    printf("+\n");
-    for (int i=0; i<=hash; i++){
-        printf("#");
-    }
-    printf("\n\n [::] ");
+    printLine(0,"CNotes");
+
+    printLine(1,"1.Create Note");
+    printLine(1,"2.Read Note");
+    printLine(1,"3.Modify Note");
+    printLine(1,"4.List Notes");
+    printLine(1,"q.Exit");
+
+    printLine(2,"");
 
 }
 
@@ -177,9 +185,26 @@ void modifyNote(){
 
 }
 
+void listNotes(){
+
+    switch (os)
+    {
+        case 0: ;
+            char linuxListCmnd[10]="ls *.txt";
+            system(linuxListCmnd);
+            break;
+        case 1: ;
+            char winListCmnd[10]="dir *.txt";
+            system(winListCmnd);
+            break;
+        default:
+            break;
+    }
+
+}
+
 int main(){
 
-    // sleep(3);
     system(clrCmnd);
     
     while(1){
@@ -199,6 +224,12 @@ int main(){
                 modifyNote();
                 break;
             case '4':
+                listNotes();
+                break;
+            case 'q':
+                exit(1);
+                break;
+            case 'Q':
                 exit(1);
                 break;
             default:
