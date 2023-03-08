@@ -9,9 +9,14 @@
     char clrCmnd[5]="clear";
 #elif _WIN32
     #include <Windows.h>
+    #include <io.h>
+    #define F_OK 0
+    #define access _access
     int os=1;
     char clrCmnd[3]="cls";
 #endif
+
+char path[] = "./notes/";
 
 void printLine(int type, char content[20]){
 
@@ -91,18 +96,22 @@ void createNote(){
     printf("Enter name of the note: ");
     fgets(filename, 255, stdin);
     filename[strlen(filename) - 1] = '\0';
-    strcat(filename, ".txt");
+
+    char filePath[strlen(filename)];
+    strcat(filePath, path);
+    strcat(filePath, filename);
+    strcat(filePath, ".txt");
 
     char content[500];
     printf("Enter the note:\n");
     fgets(content, 500, stdin);
 
     FILE *file;
-    file = fopen(filename, "w");
+    file = fopen(filePath, "w");
     if(file == NULL)
     {
-        printf("Error while creating note!");   
-        exit(1);
+        printf("\n!!Failed to create Note!!\nPress 'Enter' to continue...");
+        getchar();
     }
     fprintf(file, "%s", content);
     system(clrCmnd);
@@ -121,18 +130,24 @@ void readNote(){
     fgets(filename, 255, stdin);
     filename[strlen(filename) - 1] = '\0';
     strcat(filename, ".txt");
+
+    char filePath[strlen(filename)];
+    strcat(filePath, path);
+    strcat(filePath, filename);
+    strcat(filePath, ".txt");
     
     FILE *file;
-    file = fopen(filename, "r");
+    file = fopen(filePath, "r");
     if(file == NULL)
     {
-        printf("Error while reading note!");   
-        exit(1);
+        printf("\n!!Note doesn't exist!!\nPress 'Enter' to continue...");
+        getchar();
+        return 0;
     }
     system(clrCmnd);
     char foo[500];
     fgets(foo,500,file);
-    printf("\nNote Found!\nFilename: %s\nContent:\n\n%s",filename,foo);
+    printf("\nNote Found!\nFilename: %s\nPath: %s\nContent:\n\n%s",filename,filePath,foo);
     fclose(file);
 
 }
@@ -147,42 +162,57 @@ void modifyNote(){
     filename[strlen(filename) - 1] = '\0';
     strcat(filename, ".txt");
 
-    switch (os)
-    {
-        case 0: ;
-            char linuxCopyCmnd[500]="cat ";
-            strcat(linuxCopyCmnd,filename);
-            strcat(linuxCopyCmnd," | xclip -selection clipboard");
-            system(linuxCopyCmnd);
-            break;
-        case 1: ;
-            char winCopyCmnd[500]="type ";
-            strcat(winCopyCmnd,filename);
-            strcat(winCopyCmnd," | clip");
-            system(winCopyCmnd);
-            break;
-        default:
-            break;
-    }
-    
-    FILE *file;
-    file = fopen(filename, "w");
-    if(file == NULL)
-    {
-        printf("Error while creating note!");   
-        exit(1);
-    }
+    char filePath[strlen(filename)];
+    strcat(filePath, path);
+    strcat(filePath, filename);
+    strcat(filePath, ".txt");
 
-    char content[500];
-    printf("Enter the note:");
-    printf("\n!!Please press 'Ctrl+Shift+V'!!\n\n");
-    scanf("%[^\r\n]s", content);
-    fprintf(file, "%s", content);
-    system(clrCmnd);
-    printf("\nNote created!\n");
-    printf("Filename: %s\n",filename);
-    fclose(file);
+    if (access(filePath, F_OK) == 0) {
 
+        switch (os)
+        {
+            case 0: ;
+                char linuxCopyCmnd[500]="cat '";
+                strcat(linuxCopyCmnd,filePath);
+                strcat(linuxCopyCmnd,"' | xclip -selection clipboard");
+                system(linuxCopyCmnd);
+                break;
+            case 1: ;
+                char winCopyCmnd[500]="type '";
+                strcat(winCopyCmnd,filePath);
+                strcat(winCopyCmnd,"' | clip");
+                system(winCopyCmnd);
+                break;
+            default:
+                printf("\nSomething went wrong!\nPress 'Enter' to continue...");
+                return 0;
+                break;
+        }
+        
+        FILE *file;
+        file = fopen(filePath, "w");
+        if(file == NULL)
+        {
+            printf("\n!!Failed to create Note!!\nPress 'Enter' to continue...");
+            getchar();
+        }
+
+        char content[500];
+        printf("Enter the note:");
+        printf("\n!!Please press 'Ctrl+Shift+V'!!\n\n");
+        scanf("%[^\r\n]s", content);
+        fprintf(file, "%s", content);
+        system(clrCmnd);
+        printf("\nNote created!\n");
+        printf("Filename: %s\n",filename);
+        printf("Path: %s\n",filePath);
+        fclose(file);
+    }
+    else {
+        printf("\n!!Note doesn't exist!!\nPress 'Enter' to continue...");
+        getchar();
+        return 0;
+    }
 }
 
 void listNotes(){
@@ -190,12 +220,14 @@ void listNotes(){
     switch (os)
     {
         case 0: ;
-            char linuxListCmnd[10]="ls *.txt";
+            char linuxListCmnd[]="ls ./notes/";
             system(linuxListCmnd);
+            getchar();
             break;
         case 1: ;
-            char winListCmnd[10]="dir *.txt";
+            char winListCmnd[]="dir ./notes/";
             system(winListCmnd);
+            getchar();
             break;
         default:
             break;
@@ -205,34 +237,46 @@ void listNotes(){
 
 int main(){
 
+    system("mkdir notes &> /dev/null");
     system(clrCmnd);
     
     while(1){
+        
         char option;
-        drawUI();
+            drawUI();
+
         scanf(" %c",&option);
         getchar();
+        
         system(clrCmnd);
+        
         switch(option){
             case '1':
                 createNote();
+                system(clrCmnd);
                 break;
             case '2':
                 readNote();
+                system(clrCmnd);
                 break;
             case '3':
                 modifyNote();
+                system(clrCmnd);
                 break;
             case '4':
                 listNotes();
+                system(clrCmnd);
                 break;
             case 'q':
                 exit(1);
+                system(clrCmnd);
                 break;
             case 'Q':
                 exit(1);
+                system(clrCmnd);
                 break;
             default:
+                break;
                 printf("\n!!Enter valid option!!\n");
         }
     }
