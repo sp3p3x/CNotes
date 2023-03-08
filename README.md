@@ -22,8 +22,8 @@ gcc -o cnotes.exe main.c
 
 - [x] write and read notes
 - [x] edit notes
+- [x] list notes
 - [ ] delete notes
-- [ ] list notes
 - [ ] arbitrary length strings
 - [ ] search
 - [ ] templates
@@ -34,6 +34,7 @@ gcc -o cnotes.exe main.c
 
 ## <b>To Fix:</b>
 
+- [ ] fix: list notes
 - [ ] check dependencies
 - [ ] cannot write paras [\n is taken as end of input]
 - [ ] read file till "\0"
