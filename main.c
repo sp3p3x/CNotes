@@ -16,7 +16,7 @@
     char clrCmnd[3]="cls";
 #endif
 
-char path[] = "./notes/";
+char savePath[] = "./notes/";
 
 void printLine(int type, char content[20]){
 
@@ -96,11 +96,13 @@ void createNote(){
     printf("Enter name of the note: ");
     fgets(filename, 255, stdin);
     filename[strlen(filename) - 1] = '\0';
+    strcat(filename, ".txt");
 
-    char filePath[strlen(filename)];
-    strcat(filePath, path);
+
+    // char filePath[strlen(filename)+strlen(savePath)+4];
+    char filePath[300]="";
+    strcat(filePath, savePath);
     strcat(filePath, filename);
-    strcat(filePath, ".txt");
 
     char content[500];
     printf("Enter the note:\n");
@@ -112,6 +114,7 @@ void createNote(){
     {
         printf("\n!!Failed to create Note!!\nPress 'Enter' to continue...");
         getchar();
+        return 0;
     }
     fprintf(file, "%s", content);
     system(clrCmnd);
@@ -121,7 +124,7 @@ void createNote(){
 
 }
 
-void readNote(){
+int readNote(){
 
     printf("\n");
 
@@ -131,10 +134,9 @@ void readNote(){
     filename[strlen(filename) - 1] = '\0';
     strcat(filename, ".txt");
 
-    char filePath[strlen(filename)];
-    strcat(filePath, path);
+    char filePath[300]="";
+    strcat(filePath, savePath);
     strcat(filePath, filename);
-    strcat(filePath, ".txt");
     
     FILE *file;
     file = fopen(filePath, "r");
@@ -147,8 +149,11 @@ void readNote(){
     system(clrCmnd);
     char foo[500];
     fgets(foo,500,file);
-    printf("\nNote Found!\nFilename: %s\nPath: %s\nContent:\n\n%s",filename,filePath,foo);
+    printf("\nFilename: %s\n\nPath: %s\n\nContent:\n\n%s",filename,filePath,foo);
     fclose(file);
+    printf("\n\nPress 'Enter' to continue...");
+    getchar();
+    return 0;
 
 }
 
@@ -162,8 +167,8 @@ void modifyNote(){
     filename[strlen(filename) - 1] = '\0';
     strcat(filename, ".txt");
 
-    char filePath[strlen(filename)];
-    strcat(filePath, path);
+    char filePath[300]="";
+    strcat(filePath, savePath);
     strcat(filePath, filename);
     strcat(filePath, ".txt");
 
@@ -185,6 +190,7 @@ void modifyNote(){
                 break;
             default:
                 printf("\nSomething went wrong!\nPress 'Enter' to continue...");
+                getchar();
                 return 0;
                 break;
         }
@@ -205,7 +211,7 @@ void modifyNote(){
         system(clrCmnd);
         printf("\nNote created!\n");
         printf("Filename: %s\n",filename);
-        printf("Path: %s\n",filePath);
+        printf("savePath: %s\n",filePath);
         fclose(file);
     }
     else {
@@ -220,14 +226,20 @@ void listNotes(){
     switch (os)
     {
         case 0: ;
-            char linuxListCmnd[]="ls ./notes/";
+            printf("Notes Found:\n\n");
+            char linuxListCmnd[]="ls ./notes/ | fold -s";
             system(linuxListCmnd);
+            printf("\n\nPress 'Enter' to continue...");
             getchar();
+            return 0;
             break;
         case 1: ;
+            printf("Notes Found:\n\n");
             char winListCmnd[]="dir ./notes/";
             system(winListCmnd);
+            printf("\n\nPress 'Enter' to continue...");
             getchar();
+            return 0;
             break;
         default:
             break;
@@ -237,7 +249,8 @@ void listNotes(){
 
 int main(){
 
-    system("mkdir notes &> /dev/null");
+    // system("mkdir notes &> /dev/null");
+    
     system(clrCmnd);
     
     while(1){
